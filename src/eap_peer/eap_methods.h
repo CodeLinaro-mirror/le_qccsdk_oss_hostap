@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAP peer: Method registration
  * Copyright (c) 2004-2007, Jouni Malinen <j@w1.fi>
  *
@@ -10,6 +16,7 @@
 #define EAP_METHODS_H
 
 #include "eap_common/eap_defs.h"
+#include "wlan_8021x_cfg.h"
 
 const struct eap_method * eap_peer_get_eap_method(int vendor,
 						  enum eap_type method);

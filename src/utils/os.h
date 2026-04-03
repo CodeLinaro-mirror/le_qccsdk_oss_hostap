@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * OS specific functions
  * Copyright (c) 2005-2009, Jouni Malinen <j@w1.fi>
  *
@@ -9,7 +15,10 @@
 #ifndef OS_H
 #define OS_H
 
+#include <stdlib.h>
+
 typedef long os_time_t;
+typedef unsigned int size_t;
 
 /**
  * os_sleep - Sleep (sec, usec)
@@ -27,6 +36,7 @@ struct os_reltime {
 	os_time_t sec;
 	os_time_t usec;
 };
+
 
 /**
  * os_get_time - Get current time (sec, usec)
@@ -161,6 +171,7 @@ struct os_tm {
 	int year; /* Four digit year */
 };
 
+
 int os_gmtime(os_time_t t, struct os_tm *tm);
 
 /**
@@ -190,6 +201,7 @@ int os_get_random(unsigned char *buf, size_t len);
  */
 unsigned long os_random(void);
 
+#if 0
 /**
  * os_rel2abs_path - Get an absolute path for a file
  * @rel_path: Relative path to a file
@@ -709,5 +721,7 @@ static inline int testing_get_fail_pattern(bool is_alloc, char *buf,
 	return -1;
 }
 #endif
+
+#endif /* 0 */
 
 #endif /* OS_H */

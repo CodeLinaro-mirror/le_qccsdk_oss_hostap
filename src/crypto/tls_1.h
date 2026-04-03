@@ -210,8 +210,6 @@ struct tls_connection_params {
 	const char *private_key_passwd;
 	const char *private_key_passwd2;
 	const char *dh_file;
-	const u8 *dh_blob;
-	size_t dh_blob_len;
 
 	/* OpenSSL specific variables */
 	int engine;

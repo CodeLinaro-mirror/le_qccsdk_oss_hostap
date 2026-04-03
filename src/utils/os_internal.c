@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd / Internal implementation of OS specific functions
  * Copyright (c) 2005-2006, Jouni Malinen <j@w1.fi>
  *
@@ -22,7 +28,7 @@
 
 #undef OS_REJECT_C_LIB_FUNCTIONS
 #include "common.h"
-
+#if 0
 void os_sleep(os_time_t sec, os_time_t usec)
 {
 #if defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200809L)
@@ -36,8 +42,9 @@ void os_sleep(os_time_t sec, os_time_t usec)
 		usleep(usec);
 #endif
 }
+#endif
 
-
+#if 0
 int os_get_time(struct os_time *t)
 {
 	int res;
@@ -58,6 +65,37 @@ int os_get_reltime(struct os_reltime *t)
 	t->usec = tv.tv_usec;
 	return res;
 }
+
+#else
+
+int os_get_time(struct os_time *t) {
+  uint64_t now_us;
+
+  if (t == NULL)
+    return -1;
+
+  now_us = hres_timer_curr_time_us();
+
+  t->sec = now_us / 1000000ULL;
+  t->usec = now_us % 1000000ULL;
+
+  return 0;
+}
+
+int os_get_reltime(struct os_reltime *t) {
+  uint64_t now_us;
+
+  if (t == NULL)
+    return -1;
+
+  now_us = hres_timer_curr_time_us();
+
+  t->sec = now_us / 1000000ULL;
+  t->usec = now_us % 1000000ULL;
+
+  return 0;
+}
+#endif
 
 
 int os_mktime(int year, int month, int day, int hour, int min, int sec,
@@ -82,7 +120,7 @@ int os_mktime(int year, int month, int day, int hour, int min, int sec,
 	return 0;
 }
 
-
+#if 0
 int os_gmtime(os_time_t t, struct os_tm *tm)
 {
 	struct tm *tm2;
@@ -125,8 +163,10 @@ void os_daemonize_terminate(const char *pid_file)
 	if (pid_file)
 		unlink(pid_file);
 }
+#endif
 
 
+#if 0
 int os_get_random(unsigned char *buf, size_t len)
 {
 	FILE *f;
@@ -144,13 +184,34 @@ int os_get_random(unsigned char *buf, size_t len)
 	return rc != len ? -1 : 0;
 }
 
+#else
+/* ret: 0, success; -1, fail */
+int os_get_random(unsigned char *buf, size_t len) {
+  bool ret_bool = false;
+  bool ret = -1;
+
+#ifdef NT_FN_HW_CRYPTO
+  ret_bool = nt_wlan_hw_prng_get(buf, len);
+#else
+  ret_bool = Rng_getRNG(buf, len);
+#endif // NT_FN_HW_CRYPTO
+
+  if (ret_bool == true) {
+    ret = 0;
+  } else {
+	printf("os get random fail\n");
+  }
+
+  return ret;
+}
 
 unsigned long os_random(void)
 {
 	return random();
 }
+#endif
 
-
+#if 0
 char * os_rel2abs_path(const char *rel_path)
 {
 	char *buf = NULL, *cwd, *ret;
@@ -333,7 +394,7 @@ int os_memcmp(const void *s1, const void *s2, size_t n)
 
 	return *p1 - *p2;
 }
-
+#endif
 
 char * os_strdup(const char *s)
 {
@@ -380,12 +441,19 @@ int os_strncasecmp(const char *s1, const char *s2, size_t n)
 
 char * os_strchr(const char *s, int c)
 {
-	while (*s) {
-		if (*s == c)
-			return (char *) s;
-		s++;
-	}
-	return NULL;
+	char *sp = (char *)s;
+   char  ch = (char)(c & 0xff);
+
+   while (*sp != '\0')
+   {
+      if (*sp == ch)
+      {
+         return (sp);
+      }
+      ++sp;
+   }
+
+   return (NULL);
 }
 
 
@@ -487,7 +555,7 @@ char * os_strstr(const char *haystack, const char *needle)
 	return NULL;
 }
 
-
+#if 0
 int os_snprintf(char *str, size_t size, const char *format, ...)
 {
 	va_list ap;
@@ -558,3 +626,4 @@ int os_exec(const char *program, const char *arg, int wait_completion)
 
 	return 0;
 }
+#endif

@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * Doubly-linked list
  * Copyright (c) 2009-2019, Jouni Malinen <j@w1.fi>
  *
@@ -6,9 +12,10 @@
  * See README for more details.
  */
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef LIST_H_1
+#define LIST_H_1
 
+#include <stddef.h>
 /**
  * struct dl_list - Doubly-linked list
  */
@@ -94,4 +101,4 @@ static inline unsigned int dl_list_len(const struct dl_list *list)
 #define DEFINE_DL_LIST(name) \
 	struct dl_list name = { &(name), &(name) }
 
-#endif /* LIST_H */
+#endif /* LIST_H_1 */

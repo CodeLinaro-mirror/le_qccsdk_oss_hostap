@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * TLS interface functions and an internal TLS implementation
  * Copyright (c) 2004-2019, Jouni Malinen <j@w1.fi>
  *
@@ -15,7 +21,7 @@
 #include "tls.h"
 #include "tls/tlsv1_client.h"
 #include "tls/tlsv1_server.h"
-
+#include "wpa_buf.h"
 
 static int tls_ref_count = 0;
 

@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAPOL supplicant state machines
  * Copyright (c) 2004-2012, Jouni Malinen <j@w1.fi>
  *
@@ -10,7 +16,7 @@
 
 #include "common.h"
 #include "state_machine.h"
-#include "wpabuf.h"
+#include "wpa_buf.h"
 #include "eloop.h"
 #include "crypto/crypto.h"
 #include "crypto/md5.h"

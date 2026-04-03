@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd / common helper functions, etc.
  * Copyright (c) 2002-2019, Jouni Malinen <j@w1.fi>
  *
@@ -878,7 +884,7 @@ char * freq_range_list_str(const struct wpa_freq_range_list *list)
 	return buf;
 }
 
-
+#if 0
 size_t int_array_len(const int *a)
 {
 	size_t i;
@@ -887,7 +893,7 @@ size_t int_array_len(const int *a)
 		;
 	return i;
 }
-
+#endif
 
 void int_array_concat(int **res, const int *a)
 {
@@ -1339,9 +1345,11 @@ char * get_param(const char *cmd, const char *param)
 static void * (* const volatile memset_func)(void *, int, size_t) = memset;
 static u8 forced_memzero_val;
 
+#if 0
 void forced_memzero(void *ptr, size_t len)
 {
 	memset_func(ptr, 0, len);
 	if (len)
 		forced_memzero_val = ((u8 *) ptr)[0];
 }
+#endif

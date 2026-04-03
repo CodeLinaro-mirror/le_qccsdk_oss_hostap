@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * ASN.1 DER parsing
  * Copyright (c) 2006-2014, Jouni Malinen <j@w1.fi>
  *
@@ -9,7 +15,6 @@
 #include "includes.h"
 
 #include "common.h"
-#include "utils/wpabuf.h"
 #include "asn1.h"
 
 const struct asn1_oid asn1_sha1_oid = {

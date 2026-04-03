@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * Minimal code for RSA support from LibTomMath 0.41
  * http://libtom.org/
  * http://libtom.org/files/ltm-0.41.tar.bz2
@@ -14,6 +20,7 @@
  * libtommath.c file instead of using the external LibTomMath library.
  */
 
+#include "common.h"
 #ifndef CHAR_BIT
 #define CHAR_BIT 8
 #endif

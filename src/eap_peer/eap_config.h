@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAP peer configuration data
  * Copyright (c) 2003-2019, Jouni Malinen <j@w1.fi>
  *
@@ -9,6 +15,7 @@
 #ifndef EAP_CONFIG_H
 #define EAP_CONFIG_H
 
+#include "utils/common.h"
 /**
  * struct eap_peer_cert_config - EAP peer certificate configuration/credential
  */

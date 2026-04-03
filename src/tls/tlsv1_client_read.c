@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * TLSv1 client - read handshake message
  * Copyright (c) 2006-2015, Jouni Malinen <j@w1.fi>
  *
@@ -800,6 +806,10 @@ static enum tls_ocsp_result
 tls_process_certificate_status_ocsp_response(struct tlsv1_client *conn,
 					     const u8 *pos, size_t len)
 {
+#ifdef CONFIG_TLS_DISABLE_OCSP
+	/* OCSP disabled on embedded platform, skip response and treat as no-staple */
+    return TLS_OCSP_NO_RESPONSE;
+#else
 	const u8 *end = pos + len;
 	u32 ocsp_resp_len;
 
@@ -818,6 +828,7 @@ tls_process_certificate_status_ocsp_response(struct tlsv1_client *conn,
 	}
 
 	return tls_process_ocsp_response(conn, pos, ocsp_resp_len);
+#endif
 }
 
 

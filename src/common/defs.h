@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * WPA Supplicant - Common definitions
  * Copyright (c) 2004-2018, Jouni Malinen <j@w1.fi>
  *
@@ -8,6 +14,10 @@
 
 #ifndef DEFS_H
 #define DEFS_H
+
+#ifndef BIT
+#define BIT(n) (1 << (n))
+#endif
 
 #define WPA_CIPHER_NONE BIT(0)
 #define WPA_CIPHER_WEP40 BIT(1)

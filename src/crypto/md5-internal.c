@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * MD5 hash implementation and interface functions
  * Copyright (c) 2003-2005, Jouni Malinen <j@w1.fi>
  *
@@ -19,7 +25,7 @@ static void MD5Transform(u32 buf[4], u32 const in[16]);
 
 typedef struct MD5Context MD5_CTX;
 
-
+#if 0
 /**
  * md5_vector - MD5 hash for data vector
  * @num_elem: Number of elements in the data vector
@@ -42,6 +48,7 @@ int md5_vector(size_t num_elem, const u8 *addr[], const size_t *len, u8 *mac)
 	MD5Final(mac, &ctx);
 	return 0;
 }
+#endif
 
 
 /* ===== start - public domain MD5 implementation ===== */

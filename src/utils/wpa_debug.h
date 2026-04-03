@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd / Debug prints
  * Copyright (c) 2002-2013, Jouni Malinen <j@w1.fi>
  *
@@ -8,7 +14,7 @@
 
 #ifndef WPA_DEBUG_H
 #define WPA_DEBUG_H
-
+#if 0
 #include "wpabuf.h"
 
 extern int wpa_debug_level;
@@ -22,9 +28,12 @@ extern int wpa_debug_syslog;
 enum {
 	MSG_EXCESSIVE, MSG_MSGDUMP, MSG_DEBUG, MSG_INFO, MSG_WARNING, MSG_ERROR
 };
+#endif
+
+typedef void(*cb_printf_t)(void *Group_Handle, const uint8_t *format, ...);
 
 #ifdef CONFIG_NO_STDOUT_DEBUG
-
+#if 0
 #define wpa_debug_print_timestamp() do { } while (0)
 #define wpa_printf(args...) do { } while (0)
 #define wpa_debug_open_file(p) do { } while (0)
@@ -62,6 +71,7 @@ static inline void wpa_hexdump_ascii_key(int level, const char *title,
 					 const void *buf, size_t len)
 {
 }
+#endif
 
 static inline int wpa_debug_reopen_file(void)
 {
@@ -96,9 +106,11 @@ void wpa_debug_print_timestamp(void);
  *
  * Note: New line '\n' is added to the end of the text when printing to stdout.
  */
-void wpa_printf(int level, const char *fmt, ...)
+void wpa_printf(int level, char *fmt, ...)
 PRINTF_FORMAT(2, 3);
 
+#ifndef wpa_hexdump_buf
+#define wpa_hexdump_buf _wpa_hexdump_buf
 /**
  * wpa_hexdump - conditional hex dump
  * @level: priority level (MSG_*) of the message
@@ -110,14 +122,15 @@ PRINTF_FORMAT(2, 3);
  * output may be directed to stdout, stderr, and/or syslog based on
  * configuration. The contents of buf is printed out has hex dump.
  */
-void wpa_hexdump(int level, const char *title, const void *buf, size_t len);
+void wpa_hexdump(int level, const char *title, const uint8_t *buf, size_t len);
 
-static inline void wpa_hexdump_buf(int level, const char *title,
+static inline void _wpa_hexdump_buf(int level, const char *title,
 				   const struct wpabuf *buf)
 {
 	wpa_hexdump(level, title, buf ? wpabuf_head(buf) : NULL,
 		    buf ? wpabuf_len(buf) : 0);
 }
+#endif
 
 /**
  * wpa_hexdump_key - conditional hex dump, hide keys
@@ -132,7 +145,7 @@ static inline void wpa_hexdump_buf(int level, const char *title,
  * like wpa_hexdump(), but by default, does not include secret keys (passwords,
  * etc.) in debug output.
  */
-void wpa_hexdump_key(int level, const char *title, const void *buf, size_t len);
+void wpa_hexdump_key(int level, const char *title, const uint8_t *buf, size_t len);
 
 static inline void wpa_hexdump_buf_key(int level, const char *title,
 				       const struct wpabuf *buf)
@@ -154,7 +167,7 @@ static inline void wpa_hexdump_buf_key(int level, const char *title,
  * the hex numbers and ASCII characters (for printable range) are shown. 16
  * bytes per line will be shown.
  */
-void wpa_hexdump_ascii(int level, const char *title, const void *buf,
+void wpa_hexdump_ascii(int level, const char *title, const uint8_t *buf,
 		       size_t len);
 
 /**
@@ -171,7 +184,7 @@ void wpa_hexdump_ascii(int level, const char *title, const void *buf,
  * bytes per line will be shown. This works like wpa_hexdump_ascii(), but by
  * default, does not include secret keys (passwords, etc.) in debug output.
  */
-void wpa_hexdump_ascii_key(int level, const char *title, const void *buf,
+void wpa_hexdump_ascii_key(int level, const char *title, const uint8_t *buf,
 			   size_t len);
 
 /*
@@ -392,5 +405,7 @@ static inline void wpa_debug_close_linux_tracing(void)
 
 const char * debug_level_str(int level);
 int str_to_debug_level(const char *s);
+
+#include "wpa_common.h"
 
 #endif /* WPA_DEBUG_H */

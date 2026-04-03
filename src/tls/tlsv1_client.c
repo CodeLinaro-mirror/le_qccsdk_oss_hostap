@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * TLS v1.0/v1.1/v1.2 client (RFC 2246, RFC 4346, RFC 5246)
  * Copyright (c) 2006-2019, Jouni Malinen <j@w1.fi>
  *
@@ -483,15 +489,15 @@ struct tlsv1_client * tlsv1_client_init(void)
 
 	count = 0;
 	suites = conn->cipher_suites;
-	suites[count++] = TLS_DHE_RSA_WITH_AES_256_CBC_SHA256;
+	// suites[count++] = TLS_DHE_RSA_WITH_AES_256_CBC_SHA256;
 	suites[count++] = TLS_RSA_WITH_AES_256_CBC_SHA256;
-	suites[count++] = TLS_DHE_RSA_WITH_AES_256_CBC_SHA;
+	// suites[count++] = TLS_DHE_RSA_WITH_AES_256_CBC_SHA;
 	suites[count++] = TLS_RSA_WITH_AES_256_CBC_SHA;
-	suites[count++] = TLS_DHE_RSA_WITH_AES_128_CBC_SHA256;
+	// suites[count++] = TLS_DHE_RSA_WITH_AES_128_CBC_SHA256;
 	suites[count++] = TLS_RSA_WITH_AES_128_CBC_SHA256;
-	suites[count++] = TLS_DHE_RSA_WITH_AES_128_CBC_SHA;
+	// suites[count++] = TLS_DHE_RSA_WITH_AES_128_CBC_SHA;
 	suites[count++] = TLS_RSA_WITH_AES_128_CBC_SHA;
-	suites[count++] = TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA;
+	// suites[count++] = TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA;
 	suites[count++] = TLS_RSA_WITH_3DES_EDE_CBC_SHA;
 	suites[count++] = TLS_RSA_WITH_RC4_128_SHA;
 	suites[count++] = TLS_RSA_WITH_RC4_128_MD5;

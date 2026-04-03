@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAP peer state machines internal structures (RFC 4137)
  * Copyright (c) 2004-2014, Jouni Malinen <j@w1.fi>
  *
@@ -9,7 +15,7 @@
 #ifndef EAP_I_H
 #define EAP_I_H
 
-#include "wpabuf.h"
+#include "wpa_buf.h"
 #include "utils/list.h"
 #include "eap_peer/eap.h"
 #include "eap_common/eap_common.h"

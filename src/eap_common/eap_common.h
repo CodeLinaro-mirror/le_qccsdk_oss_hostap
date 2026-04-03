@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAP common peer/server definitions
  * Copyright (c) 2004-2014, Jouni Malinen <j@w1.fi>
  *
@@ -9,7 +15,7 @@
 #ifndef EAP_COMMON_H
 #define EAP_COMMON_H
 
-#include "wpabuf.h"
+#include "wpa_buf.h"
 
 struct erp_tlvs {
 	const u8 *keyname;

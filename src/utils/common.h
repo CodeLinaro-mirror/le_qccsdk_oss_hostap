@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd / common helper functions, etc.
  * Copyright (c) 2002-2007, Jouni Malinen <j@w1.fi>
  *
@@ -10,6 +16,11 @@
 #define COMMON_H
 
 #include "os.h"
+
+#include "qcc730_os.h"
+#include "includes.h"
+#include "wpa_common.h"
+#include "wpa_buf.h"
 
 #if defined(__linux__) || defined(__GLIBC__)
 #include <endian.h>
@@ -167,6 +178,7 @@ static inline unsigned int wpa_swap_32(unsigned int v)
 #if defined(sparc)
 #define __BYTE_ORDER __BIG_ENDIAN
 #endif
+#define __BYTE_ORDER __LITTLE_ENDIAN
 #endif /* __BIG_ENDIAN */
 #endif /* __LITTLE_ENDIAN */
 #endif /* __BYTE_ORDER */
@@ -207,7 +219,7 @@ static inline unsigned int wpa_swap_32(unsigned int v)
 #define WPA_BYTE_SWAP_DEFINED
 #endif /* !WPA_BYTE_SWAP_DEFINED */
 
-
+#if 0
 /* Macros for handling unaligned memory accesses */
 
 static inline u16 WPA_GET_BE16(const u8 *a)
@@ -338,7 +350,7 @@ static inline void WPA_PUT_LE64(u8 *a, u64 val)
 	a[1] = val >> 8;
 	a[0] = val & 0xff;
 }
-
+#endif /* 0 */
 
 #ifndef ETH_ALEN
 #define ETH_ALEN 6
@@ -405,11 +417,13 @@ int getopt(int argc, char *const argv[], const char *optstring);
 extern char *optarg;
 extern int optind;
 
+#if 0
 #ifndef CONFIG_NO_SOCKLEN_T_TYPEDEF
 #ifndef __socklen_t_defined
 typedef int socklen_t;
 #endif
 #endif
+#endif  /* 0 */
 
 /* inline - define as __inline or just define it to be empty, if needed */
 #ifdef CONFIG_NO_INLINE
@@ -594,7 +608,9 @@ int freq_range_list_includes(const struct wpa_freq_range_list *list,
 			     unsigned int freq);
 char * freq_range_list_str(const struct wpa_freq_range_list *list);
 
+#if 0
 size_t int_array_len(const int *a);
+#endif
 void int_array_concat(int **res, const int *a);
 void int_array_sort_unique(int *a);
 void int_array_add_unique(int **res, int a);

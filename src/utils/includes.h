@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd - Default include files
  * Copyright (c) 2005-2006, Jouni Malinen <j@w1.fi>
  *
@@ -35,10 +41,10 @@
 
 #ifndef CONFIG_NATIVE_WINDOWS
 #include <sys/socket.h>
-#include <netinet/in.h>
+// #include <netinet/in.h>
 #include <arpa/inet.h>
 #ifndef __vxworks
-#include <sys/uio.h>
+// #include <sys/uio.h>
 #include <sys/time.h>
 #endif /* __vxworks */
 #endif /* CONFIG_NATIVE_WINDOWS */

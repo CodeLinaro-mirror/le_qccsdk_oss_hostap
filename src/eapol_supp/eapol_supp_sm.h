@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAPOL supplicant state machines
  * Copyright (c) 2004-2012, Jouni Malinen <j@w1.fi>
  *
@@ -10,6 +16,7 @@
 #define EAPOL_SUPP_SM_H
 
 #include "common/defs.h"
+#include "common.h"
 
 struct tls_cert_data;
 

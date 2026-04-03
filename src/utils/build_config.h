@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd - Build time configuration defines
  * Copyright (c) 2005-2006, Jouni Malinen <j@w1.fi>
  *
@@ -16,6 +22,7 @@
 #define BUILD_CONFIG_H
 
 /* Insert configuration defines, e.g., #define EAP_MD5, here, if needed. */
+#include "supplicant_cfg.h"
 
 #ifdef CONFIG_WIN32_DEFAULTS
 #define CONFIG_NATIVE_WINDOWS

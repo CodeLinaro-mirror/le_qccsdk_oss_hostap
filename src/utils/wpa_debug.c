@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * wpa_supplicant/hostapd / Debug prints
  * Copyright (c) 2002-2013, Jouni Malinen <j@w1.fi>
  *
@@ -9,7 +15,7 @@
 #include "includes.h"
 
 #include "common.h"
-
+#include "wpa_debug.h"
 #ifdef CONFIG_DEBUG_SYSLOG
 #include <syslog.h>
 #endif /* CONFIG_DEBUG_SYSLOG */
@@ -26,7 +32,7 @@ static FILE *wpa_debug_tracing_file = NULL;
 #define WPAS_TRACE_PFX "wpas <%d>: "
 #endif /* CONFIG_DEBUG_LINUX_TRACING */
 
-
+#define WPA_MAX_LOG_LEN 256
 int wpa_debug_level = MSG_INFO;
 int wpa_debug_show_keys = 0;
 int wpa_debug_timestamp = 0;
@@ -208,7 +214,7 @@ void wpa_debug_close_linux_tracing(void)
 
 #endif /* CONFIG_DEBUG_LINUX_TRACING */
 
-
+#if 0
 /**
  * wpa_printf - conditional printf
  * @level: priority level (MSG_*) of the message
@@ -220,7 +226,7 @@ void wpa_debug_close_linux_tracing(void)
  *
  * Note: New line '\n' is added to the end of the text when printing to stdout.
  */
-void wpa_printf(int level, const char *fmt, ...)
+void wpa_printf(int level, char *fmt, ...)
 {
 	va_list ap;
 
@@ -268,6 +274,32 @@ void wpa_printf(int level, const char *fmt, ...)
 #endif /* CONFIG_DEBUG_LINUX_TRACING */
 }
 
+#else
+
+extern cb_printf_t wlan_dbg_Printf;
+extern void *wlan_dbg_group;
+
+void wpa_printf(int level, char *fmt, ...)
+{
+    va_list ap;
+    char log_buf[WPA_MAX_LOG_LEN];
+
+    if (fmt == NULL || !wlan_dbg_Printf || !wlan_dbg_group) {
+        return;
+    }
+
+    if (level >= wpa_debug_level) {
+        va_start(ap, fmt);
+        
+        vsnprintf(log_buf, sizeof(log_buf), fmt, ap);
+        
+        va_end(ap);
+
+        wlan_dbg_Printf(wlan_dbg_group, "%s\r\n", log_buf);
+    }
+}
+
+#endif /* if 0 */
 
 static void _wpa_hexdump(int level, const char *title, const u8 *buf,
 			 size_t len, int show, int only_syslog)
@@ -385,6 +417,11 @@ static void _wpa_hexdump(int level, const char *title, const u8 *buf,
 		printf("%s - hexdump(len=%lu):", title, (unsigned long) len);
 		if (buf == NULL) {
 			printf(" [NULL]");
+		} else if (len > 64) {
+			printf(" [len > 64 --> truncated]");
+			printf("\n");
+			for (i = 0; i < 64; i++)
+				printf(" %02x", buf[i]);
 		} else if (show) {
 			for (i = 0; i < len; i++)
 				printf(" %02x", buf[i]);
@@ -396,13 +433,13 @@ static void _wpa_hexdump(int level, const char *title, const u8 *buf,
 #endif /* CONFIG_ANDROID_LOG */
 }
 
-void wpa_hexdump(int level, const char *title, const void *buf, size_t len)
+void wpa_hexdump(int level, const char *title, const uint8_t *buf, size_t len)
 {
 	_wpa_hexdump(level, title, buf, len, 1, 0);
 }
 
 
-void wpa_hexdump_key(int level, const char *title, const void *buf, size_t len)
+void wpa_hexdump_key(int level, const char *title, const uint8_t *buf, size_t len)
 {
 	_wpa_hexdump(level, title, buf, len, wpa_debug_show_keys, 0);
 }
@@ -521,14 +558,14 @@ file_done:
 }
 
 
-void wpa_hexdump_ascii(int level, const char *title, const void *buf,
+void wpa_hexdump_ascii(int level, const char *title, const uint8_t *buf,
 		       size_t len)
 {
 	_wpa_hexdump_ascii(level, title, buf, len, 1);
 }
 
 
-void wpa_hexdump_ascii_key(int level, const char *title, const void *buf,
+void wpa_hexdump_ascii_key(int level, const char *title, const uint8_t *buf,
 			   size_t len)
 {
 	_wpa_hexdump_ascii(level, title, buf, len, wpa_debug_show_keys);
@@ -660,6 +697,7 @@ void wpa_msg_register_ifname_cb(wpa_msg_get_ifname_func func)
 
 void wpa_msg(void *ctx, int level, const char *fmt, ...)
 {
+#if 0
 	va_list ap;
 	char *buf;
 	int buflen;
@@ -693,6 +731,7 @@ void wpa_msg(void *ctx, int level, const char *fmt, ...)
 	if (wpa_msg_cb)
 		wpa_msg_cb(ctx, level, WPA_MSG_PER_INTERFACE, buf, len);
 	bin_clear_free(buf, buflen);
+#endif
 }
 
 

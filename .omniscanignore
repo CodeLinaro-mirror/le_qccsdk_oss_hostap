@@ -1,0 +1,39 @@
+# .omniscanignore
+
+# Ignored directories
+build_release/
+doc/
+hostapd/
+wpa_supplicant/
+eap_example/
+hs20/
+radius_example/
+tests/
+wlantest/
+wpadebug/
+wpaspy/
+src/ap/
+src/drivers/
+src/eapol_auth/
+src/eap_server/
+src/fst/
+src/l2_packet/
+src/nan/
+src/p2p/
+src/pasn/
+src/radius/
+src/rsn_supp/
+src/wps/
+
+# Ignored files
+Android.mk
+COPYING
+CONTRIBUTIONS
+Makefile
+README
+test.txt
+gen_compile_commands.py
+src/build.rules
+src/lib.rules
+src/Makefile
+src/objs.mk

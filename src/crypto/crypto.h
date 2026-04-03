@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * Wrapper functions for crypto libraries
  * Copyright (c) 2004-2017, Jouni Malinen <j@w1.fi>
  *
@@ -78,7 +84,7 @@ int __must_check fips186_2_prf(const u8 *seed, size_t seed_len, u8 *x,
  * @mac: Buffer for the hash
  * Returns: 0 on success, -1 on failure
  */
-int sha256_vector(size_t num_elem, const u8 *addr[], const size_t *len,
+static int sha256_vector(size_t num_elem, const u8 *addr[], const size_t *len,
 		  u8 *mac);
 
 /**
@@ -89,7 +95,7 @@ int sha256_vector(size_t num_elem, const u8 *addr[], const size_t *len,
  * @mac: Buffer for the hash
  * Returns: 0 on success, -1 on failure
  */
-int sha384_vector(size_t num_elem, const u8 *addr[], const size_t *len,
+static int sha384_vector(size_t num_elem, const u8 *addr[], const size_t *len,
 		  u8 *mac);
 
 /**

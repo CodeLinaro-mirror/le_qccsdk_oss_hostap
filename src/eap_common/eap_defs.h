@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause-Clear
+ */
+
+/*
  * EAP server/peer: Shared EAP definitions
  * Copyright (c) 2004-2014, Jouni Malinen <j@w1.fi>
  *
@@ -9,6 +15,7 @@
 #ifndef EAP_DEFS_H
 #define EAP_DEFS_H
 
+#include "utils/common.h"
 /* RFC 3748 - Extensible Authentication Protocol (EAP) */
 
 #ifdef _MSC_VER
