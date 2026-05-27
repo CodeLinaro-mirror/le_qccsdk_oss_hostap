@@ -5008,36 +5008,39 @@ security_profile_table[] = {
 
 #ifdef CONFIG_PQC
 	/* 16: PQC 802.1X (AKM 31), no ECP, SHA-512, ML-KEM-1024 */
-	{ 16, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 0 },
+	{ SEC_PROF_8021X_PQC_0, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
+	  true, true, true, PQC_PROFILE_ML_KEM_1024 },
 
 	/* 17: PQC 802.1X (AKM 31), P-256, SHA-256, ML-KEM-512 */
-	{ 17, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 1 },
+	{ SEC_PROF_8021X_PQC_1, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
+	  true, true, true, PQC_PROFILE_ECP_19_ML_KEM_512 },
 
 	/* 18: PQC 802.1X (AKM 31), P-384, SHA-384, ML-KEM-768 */
-	{ 18, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 2 },
+	{ SEC_PROF_8021X_PQC_2, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
+	  true, true, true, PQC_PROFILE_ECP_20_ML_KEM_768 },
 
 	/* 19: PQC 802.1X (AKM 31), P-521, SHA-512, ML-KEM-1024 */
-	{ 19, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 3 },
+	{ SEC_PROF_8021X_PQC_3, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
+	  true, true, true, PQC_PROFILE_ECP_21_ML_KEM_1024 },
 
 	/* 20: FT PQC 802.1X (AKM 32), no ECP, SHA-512, ML-KEM-1024 */
-	{ 20, WPA_KEY_MGMT_FT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 0 },
+	{ SEC_PROF_8021X_FT_PQC_0, WPA_KEY_MGMT_FT_PQC_8021X,
+	  WPA_CIPHER_GCMP_256, true, true, true, PQC_PROFILE_ML_KEM_1024 },
 
 	/* 21: FT PQC 802.1X (AKM 32), P-256, SHA-256, ML-KEM-512 */
-	{ 21, WPA_KEY_MGMT_FT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 1 },
+	{ SEC_PROF_8021X_FT_PQC_1, WPA_KEY_MGMT_FT_PQC_8021X,
+	  WPA_CIPHER_GCMP_256, true, true, true,
+	  PQC_PROFILE_ECP_19_ML_KEM_512 },
 
 	/* 22: FT PQC 802.1X (AKM 32), P-384, SHA-384, ML-KEM-768 */
-	{ 22, WPA_KEY_MGMT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 2 },
+	{ SEC_PROF_8021X_FT_PQC_2, WPA_KEY_MGMT_FT_PQC_8021X,
+	  WPA_CIPHER_GCMP_256, true, true, true,
+	  PQC_PROFILE_ECP_20_ML_KEM_768 },
 
 	/* 23: FT PQC 802.1X (AKM 32), P-521, SHA-512, ML-KEM-1024 */
-	{ 23, WPA_KEY_MGMT_FT_PQC_8021X, WPA_CIPHER_GCMP_256,
-	  true, true, true, 3 },
+	{ SEC_PROF_8021X_FT_PQC_3, WPA_KEY_MGMT_FT_PQC_8021X,
+	  WPA_CIPHER_GCMP_256, true, true, true,
+	  PQC_PROFILE_ECP_21_ML_KEM_1024 },
 #endif /* CONFIG_PQC */
 };
 
@@ -5080,6 +5083,49 @@ const struct security_profile_entry * sec_prof_get(int p)
 
 	return NULL;
 }
+
+
+#ifdef CONFIG_PQC
+
+/*
+ * Global table of PQC profiles as defined in IEEE P802.11bt/D1.0,
+ * Table 12-aa1 (PQC profiles).
+ */
+static const struct ieee80211_pqc_profile g_pqc_profiles[] = {
+	{ PQC_PROFILE_ML_KEM_1024, 0, RSN_HASH_SHA512, CRYPTO_ML_KEM_1024 },
+	{ PQC_PROFILE_ECP_19_ML_KEM_512, 19, RSN_HASH_SHA256,
+	  CRYPTO_ML_KEM_512 },
+	{ PQC_PROFILE_ECP_20_ML_KEM_768, 20, RSN_HASH_SHA384,
+	  CRYPTO_ML_KEM_768 },
+	{ PQC_PROFILE_ECP_21_ML_KEM_1024, 21, RSN_HASH_SHA512,
+	  CRYPTO_ML_KEM_1024 },
+	{ PQC_PROFILE_NONE, 0, 0, 0 }
+};
+
+
+const struct ieee80211_pqc_profile *
+pqc_profile_get(int security_profile_num)
+{
+	const struct security_profile_entry *sp =
+		sec_prof_get(security_profile_num);
+	int i;
+
+	if (!sp || sp->pqc_profile < 0) {
+		wpa_printf(MSG_ERROR,
+			   "Invalid PQC security profile number: %u",
+			   security_profile_num);
+		return NULL;
+	}
+
+	for (i = 0; g_pqc_profiles[i].number != PQC_PROFILE_NONE; i++) {
+		if (g_pqc_profiles[i].number == sp->pqc_profile)
+			return &g_pqc_profiles[i];
+	}
+
+	return NULL;
+}
+
+#endif /* CONFIG_PQC */
 
 
 #if defined(CONFIG_SAE) || defined(CONFIG_PQC)

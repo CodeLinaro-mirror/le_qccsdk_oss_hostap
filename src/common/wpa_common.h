@@ -10,6 +10,8 @@
 #define WPA_COMMON_H
 
 #include "common/defs.h"
+#include "ieee802_11_defs.h"
+#include "crypto/crypto.h"
 
 /* IEEE 802.11i */
 #define PMKID_LEN 16
@@ -882,6 +884,31 @@ struct security_profile_entry {
 int sec_prof_implied_key_mgmt(const int *profiles);
 const struct security_profile_entry * sec_prof_get(int p);
 
+/* IEEE P802.11bt/D1.0, Table 12-aa1 (PQC profiles) */
+enum pqc_profile {
+	PQC_PROFILE_NONE = -1,
+	PQC_PROFILE_ML_KEM_1024 = 0,
+	PQC_PROFILE_ECP_19_ML_KEM_512 = 1,
+	PQC_PROFILE_ECP_20_ML_KEM_768 = 2,
+	PQC_PROFILE_ECP_21_ML_KEM_1024 = 3,
+};
+
+/**
+ * struct ieee80211_pqc_profile - PQC profile
+ * @number: PQC profile number
+ * @group: ECP group number
+ * @hash: Hash algorithm
+ * @kem: KEM variant
+ *
+ * Represents a PQC profile as described in IEEE P802.11bt/D1.0, 12.12.10.
+ */
+struct ieee80211_pqc_profile {
+	enum pqc_profile number;
+	u16 group;
+	enum rsn_hash_alg hash;
+	enum crypto_ml_kem_variant kem;
+};
+
 int hkdf_extract(size_t hash_len, const u8 *salt, size_t salt_len,
 		 size_t num_elem, const u8 *addr[], const size_t len[],
 		 u8 *prk);
@@ -889,5 +916,8 @@ int hkdf_expand_bin(size_t hash_len, const u8 *prk, size_t prk_len,
 		    const u8 *info, size_t info_len, u8 *okm, size_t okm_len);
 int hkdf_expand(size_t hash_len, const u8 *prk, size_t prk_len,
 		const char *info, u8 *okm, size_t okm_len);
+
+const struct ieee80211_pqc_profile *
+pqc_profile_get(int security_profile_num);
 
 #endif /* WPA_COMMON_H */

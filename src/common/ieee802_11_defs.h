@@ -698,7 +698,18 @@
 					    * EAP over Auth */
 #define SEC_PROF_OWE			8  /* OWE/None (18) */
 #define SEC_PROF_SAE			9  /* SAE (24) */
-/* 10-119: Reserved */
+/*
+ * PQC profiles, added to Table 9-bb18 by IEEE P802.11bt/D1.0, 9.4.2.365.
+ * The trailing digit is the PQC profile number (see PQC_PROFILE_*).
+ */
+#define SEC_PROF_8021X_PQC_0		16 /* 802.1X PQC (31) */
+#define SEC_PROF_8021X_PQC_1		17 /* 802.1X PQC (31) */
+#define SEC_PROF_8021X_PQC_2		18 /* 802.1X PQC (31) */
+#define SEC_PROF_8021X_PQC_3		19 /* 802.1X PQC (31) */
+#define SEC_PROF_8021X_FT_PQC_0		20 /* 802.1X+FT PQC (32) */
+#define SEC_PROF_8021X_FT_PQC_1		21 /* 802.1X+FT PQC (32) */
+#define SEC_PROF_8021X_FT_PQC_2		22 /* 802.1X+FT PQC (32) */
+#define SEC_PROF_8021X_FT_PQC_3		23 /* 802.1X+FT PQC (32) */
 #define SEC_PROF_MAX			119
 
 static inline bool sec_prof_is_sae(int p)
