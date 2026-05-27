@@ -3433,6 +3433,17 @@ struct ieee80211_uhr_operation {
 #define UHR_OPER_PARAMS_NPCA_MOPLEN_NPCA		0x04000000
 #define UHR_OPER_PARAMS_NPCA_DIS_SUBCH_BITMAP_PRES	0x08000000
 
+/* PQC Parameter element - Content Presence field
+ * IEEE P802.11bt/D1.0, Table 9-aa3 (Content Presence field encoding) */
+enum ieee80211_pqc_content_presence {
+	PQC_CONTENT_NONE = 0,
+	PQC_CONTENT_ML_KEM_ENC_KEY = 1,
+	PQC_CONTENT_ML_KEM_CT = 2,
+	PQC_CONTENT_PK_PARAM_AND_ML_KEM_ENC_KEY = 3,
+	PQC_CONTENT_PK_PARAM_AND_ML_KEM_CT = 4,
+	PQC_CONTENT_VENDOR_SPECIFIC = 221,
+};
+
 #ifdef _MSC_VER
 #pragma pack(pop)
 #endif /* _MSC_VER */
