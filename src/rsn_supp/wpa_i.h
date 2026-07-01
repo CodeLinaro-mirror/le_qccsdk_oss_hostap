@@ -287,6 +287,8 @@ struct wpa_sm {
 	bool wnm_sleep_mode;
 
 	const struct security_profile_entry *security_profile;
+
+	bool disable_pmksa_caching;
 };
 
 

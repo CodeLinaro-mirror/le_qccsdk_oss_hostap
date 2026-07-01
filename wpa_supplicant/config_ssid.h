@@ -1413,6 +1413,11 @@ struct wpa_ssid {
 	 * This is a -1 terminated int_array of enabled security profiles.
 	 */
 	int *security_profiles;
+
+	/**
+	 * disable_pmksa_caching - Whether PMKSA caching is disabled
+	 */
+	bool disable_pmksa_caching;
 };
 
 #endif /* CONFIG_SSID_H */

@@ -440,6 +440,26 @@ static int wpa_supplicant_get_pmk(struct wpa_sm *sm,
 						     fils_cache_id, 0);
 			}
 			if (!sm->cur_pmksa && pmkid &&
+			    sm->disable_pmksa_caching &&
+			    sm->proto == WPA_PROTO_RSN &&
+			    !wpa_key_mgmt_suite_b(sm->key_mgmt) &&
+			    !wpa_key_mgmt_ft(sm->key_mgmt)) {
+				u8 new_pmkid[PMKID_LEN];
+
+				rsn_pmkid(sm->pmk, sm->pmk_len, src_addr,
+					  sm->own_addr, new_pmkid,
+					  sm->key_mgmt);
+				if (os_memcmp_const(pmkid, new_pmkid,
+						    PMKID_LEN) != 0) {
+					wpa_msg(sm->ctx->msg_ctx, MSG_INFO,
+						"RSN: PMKID mismatch with PMKSA caching disabled");
+					return -1;
+				}
+
+				wpa_dbg(sm->ctx->msg_ctx, MSG_DEBUG,
+					"RSN: PMKID matches fresh PMK with PMKSA caching disabled");
+				abort_cached = 0;
+			} else if (!sm->cur_pmksa && pmkid &&
 			    pmksa_cache_get(sm->pmksa, src_addr, sm->own_addr,
 					    pmkid, NULL, 0)) {
 				wpa_dbg(sm->ctx->msg_ctx, MSG_DEBUG,
@@ -4891,6 +4911,13 @@ void wpa_sm_set_config(struct wpa_sm *sm, struct rsn_supp_config *config)
 		}
 #endif /* CONFIG_FILS */
 		sm->beacon_prot = config->beacon_prot;
+		sm->disable_pmksa_caching = config->disable_pmksa_caching;
+		if (sm->disable_pmksa_caching) {
+			pmksa_cache_clear_current(sm);
+			if (wpa_sm_get_state(sm) != WPA_COMPLETED)
+				pmksa_cache_flush(sm->pmksa, sm->network_ctx,
+						  NULL, 0, false, NULL);
+		}
 	} else {
 		sm->network_ctx = NULL;
 		sm->allowed_pairwise_cipher = 0;
@@ -4904,6 +4931,7 @@ void wpa_sm_set_config(struct wpa_sm *sm, struct rsn_supp_config *config)
 		sm->owe_ptk_workaround = 0;
 		sm->beacon_prot = 0;
 		sm->force_kdk_derivation = false;
+		sm->disable_pmksa_caching = false;
 	}
 }
 
@@ -6061,6 +6089,9 @@ void wpa_sm_pmksa_cache_add(struct wpa_sm *sm, const u8 *pmk, size_t pmk_len,
 int wpa_sm_pmksa_exists(struct wpa_sm *sm, const u8 *bssid, const u8 *own_addr,
 			const void *network_ctx)
 {
+	if (sm->disable_pmksa_caching)
+		return 0;
+
 	return pmksa_cache_get(sm->pmksa, bssid, own_addr, NULL, network_ctx,
 			       0) != NULL;
 }
@@ -6072,6 +6103,9 @@ struct rsn_pmksa_cache_entry * wpa_sm_pmksa_cache_get(struct wpa_sm *sm,
 						      const void *network_ctx,
 						      int akmp)
 {
+	if (sm->disable_pmksa_caching)
+		return NULL;
+
 	return pmksa_cache_get(sm->pmksa, aa, sm->own_addr, pmkid, network_ctx,
 			       akmp);
 }

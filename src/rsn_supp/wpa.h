@@ -173,6 +173,7 @@ struct rsn_supp_config {
 	const u8 *fils_cache_id;
 	int beacon_prot;
 	bool force_kdk_derivation;
+	bool disable_pmksa_caching;
 };
 
 struct wpa_sm_link {

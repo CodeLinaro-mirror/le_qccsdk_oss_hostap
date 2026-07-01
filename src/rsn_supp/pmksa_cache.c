@@ -274,6 +274,12 @@ pmksa_cache_add(struct rsn_pmksa_cache *pmksa, const u8 *pmk, size_t pmk_len,
 	if (wpa_key_mgmt_suite_b(akmp) && !kck)
 		return NULL;
 
+	if (pmksa->sm && pmksa->sm->disable_pmksa_caching) {
+		wpa_printf(MSG_DEBUG,
+			   "RSN: PMKSA caching disabled - skip adding PMKSA cache entry");
+		return NULL;
+	}
+
 	entry = os_zalloc(sizeof(*entry));
 	if (entry == NULL)
 		return NULL;
@@ -357,6 +363,13 @@ pmksa_cache_add_entry(struct rsn_pmksa_cache *pmksa,
 		      struct rsn_pmksa_cache_entry *entry)
 {
 	struct rsn_pmksa_cache_entry *pos, *prev;
+
+	if (pmksa->sm && pmksa->sm->disable_pmksa_caching) {
+		wpa_printf(MSG_DEBUG,
+			   "RSN: PMKSA caching disabled - skip adding PMKSA cache entry");
+		_pmksa_cache_free_entry(entry);
+		return NULL;
+	}
 
 	/* Replace an old entry for the same Authenticator (if found) with the
 	 * new entry */
@@ -674,6 +687,8 @@ struct rsn_pmksa_cache_entry * pmksa_cache_get_current(struct wpa_sm *sm)
 {
 	if (sm == NULL)
 		return NULL;
+	if (sm->disable_pmksa_caching)
+		return NULL;
 	return sm->cur_pmksa;
 }
 
@@ -714,6 +729,12 @@ int pmksa_cache_set_current(struct wpa_sm *sm, const u8 *pmkid,
 	wpa_printf(MSG_DEBUG, "RSN: PMKSA cache search - network_ctx=%p "
 		   "try_opportunistic=%d akmp=0x%x",
 		   network_ctx, try_opportunistic, akmp);
+	if (sm->disable_pmksa_caching) {
+		wpa_printf(MSG_DEBUG,
+			   "RSN: PMKSA caching disabled - skip cache search");
+		sm->cur_pmksa = NULL;
+		return -1;
+	}
 	if (pmkid)
 		wpa_hexdump(MSG_DEBUG, "RSN: Search for PMKID",
 			    pmkid, PMKID_LEN);

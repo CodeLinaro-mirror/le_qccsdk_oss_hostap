@@ -3010,6 +3010,7 @@ static const struct parse_data ssid_fields[] = {
 	{ FUNC(pasn_groups) },
 #endif /* CONFIG_PASN */
 	{ FUNC(security_profiles) },
+	{ BOOL(disable_pmksa_caching) },
 };
 
 #undef OFFSET
