@@ -29,6 +29,32 @@
 #define WNM_MAX_NEIGHBOR_REPORT 10
 
 
+/*
+ * Per-band minimum acceptable signal levels used as an additional
+ * pre-scan-check discard in wnm_scan_process(). 6 GHz APs typically
+ * transmit at lower EIRP than 5 GHz (Low Power Indoor limits in
+ * particular), and path loss is higher on 6 GHz for the same distance,
+ * so the acceptable RSSI floor is band-dependent. The values below
+ * correspond to a rate/margin combination well above the noise floor
+ * on each band; a candidate cached below this level is treated as
+ * "not worth roaming to without more evidence" for the pre-scan step
+ * and a scan is requested instead. The main accept decision still
+ * flows through wpa_supplicant_need_to_roam_within_ess().
+ */
+#define WNM_BSS_ACCEPTABLE_SIGNAL_2GHZ (-80)
+#define WNM_BSS_ACCEPTABLE_SIGNAL_5GHZ (-75)
+#define WNM_BSS_ACCEPTABLE_SIGNAL_6GHZ (-70)
+
+static int wnm_min_acceptable_signal(int freq)
+{
+	if (is_6ghz_freq(freq))
+		return WNM_BSS_ACCEPTABLE_SIGNAL_6GHZ;
+	if (is_5ghz_freq(freq))
+		return WNM_BSS_ACCEPTABLE_SIGNAL_5GHZ;
+	return WNM_BSS_ACCEPTABLE_SIGNAL_2GHZ;
+}
+
+
 /* get the TFS IE from driver */
 static int ieee80211_11_get_tfs_ie(struct wpa_supplicant *wpa_s, u8 *buf,
 				   u16 *buf_len, enum wnm_oper oper)
@@ -1244,6 +1270,7 @@ int wnm_scan_process(struct wpa_supplicant *wpa_s, bool pre_scan_check)
 	 */
 	if (pre_scan_check) {
 		struct os_reltime age;
+		int min_signal;
 
 		if (!bss)
 			return 0;
@@ -1251,6 +1278,24 @@ int wnm_scan_process(struct wpa_supplicant *wpa_s, bool pre_scan_check)
 		os_reltime_age(&bss->last_update, &age);
 		if (age.sec >= 10)
 			return 0;
+
+		/*
+		 * If the cached signal is below the per-band acceptable
+		 * floor, request a scan before accepting rather than
+		 * committing to the roam. On 6 GHz in particular, a cached
+		 * sample well below the floor is unlikely to represent a
+		 * usable link. See WNM_BSS_ACCEPTABLE_SIGNAL_* definitions.
+		 */
+		min_signal = wnm_min_acceptable_signal(bss->freq);
+		if (bss->level < min_signal) {
+			wpa_dbg(wpa_s, MSG_DEBUG,
+				"WNM: Candidate " MACSTR
+				" signal %d < acceptable %d for %s - request scan",
+				MAC2STR(bss->bssid), bss->level, min_signal,
+				is_6ghz_freq(bss->freq) ? "6 GHz" :
+				is_5ghz_freq(bss->freq) ? "5 GHz" : "2.4 GHz");
+			return 0;
+		}
 
 #ifndef CONFIG_NO_ROAMING
 		if (current_bss && bss != current_bss &&
