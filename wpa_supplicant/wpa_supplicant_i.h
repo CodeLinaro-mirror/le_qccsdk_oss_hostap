@@ -1729,6 +1729,7 @@ struct wpa_supplicant {
 
 	bool is_6ghz_enabled;
 	bool crossed_6ghz_dom;
+	bool last_scan_covered_6ghz;
 	bool last_scan_all_chan;
 	bool last_scan_non_coloc_6ghz;
 	bool support_6ghz;

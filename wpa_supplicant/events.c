@@ -6123,7 +6123,10 @@ void wpa_supplicant_update_channel_list(struct wpa_supplicant *wpa_s,
 			wpa_dbg(ifs, MSG_INFO,
 				"Channel list changed: 6 GHz was enabled");
 
-			ifs->crossed_6ghz_dom = true;
+			/* Only force a rescan if the 6 GHz band has not been
+			 * scanned yet. */
+			if (!ifs->last_scan_covered_6ghz)
+				ifs->crossed_6ghz_dom = true;
 		}
 	}
 
@@ -7017,6 +7020,27 @@ static void wpas_roam_status(struct wpa_supplicant *wpa_s,
 }
 
 
+static void wpas_check_last_scan_6ghz(struct wpa_supplicant *wpa_s,
+				      struct scan_info *info)
+{
+	unsigned int i;
+
+	if (info->external_scan)
+		return;
+
+	wpa_s->last_scan_covered_6ghz = false;
+	if (!info->freqs)
+		return;
+
+	for (i = 0; i < info->num_freqs; i++) {
+		if (is_6ghz_freq(info->freqs[i])) {
+			wpa_s->last_scan_covered_6ghz = true;
+			break;
+		}
+	}
+}
+
+
 void wpa_supplicant_event(void *ctx, enum wpa_event_type event,
 			  union wpa_event_data *data)
 {
@@ -7169,6 +7193,9 @@ void wpa_supplicant_event(void *ctx, enum wpa_event_type event,
 			wpa_s->last_scan_req = NORMAL_SCAN_REQ;
 			break;
 		}
+
+		if (data)
+			wpas_check_last_scan_6ghz(wpa_s, &data->scan_info);
 
 		if (!(data && data->scan_info.external_scan) &&
 		    os_reltime_initialized(&wpa_s->scan_start_time)) {
