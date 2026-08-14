@@ -6123,9 +6123,13 @@ void wpa_supplicant_update_channel_list(struct wpa_supplicant *wpa_s,
 			wpa_dbg(ifs, MSG_INFO,
 				"Channel list changed: 6 GHz was enabled");
 
-			/* Only force a rescan if the 6 GHz band has not been
-			 * scanned yet. */
-			if (!ifs->last_scan_covered_6ghz)
+			/*
+			 * Only force a rescan if the 6 GHz band has not been
+			 * scanned yet, and the last scan was not explicitly
+			 * restricted to specific channels by the caller.
+			 */
+			if (!ifs->last_scan_covered_6ghz &&
+			    !ifs->last_scan_was_restricted)
 				ifs->crossed_6ghz_dom = true;
 		}
 	}
@@ -7027,6 +7031,8 @@ static void wpas_check_last_scan_6ghz(struct wpa_supplicant *wpa_s,
 
 	if (info->external_scan)
 		return;
+
+	wpa_s->last_scan_was_restricted = !wpa_s->last_scan_all_chan;
 
 	wpa_s->last_scan_covered_6ghz = false;
 	if (!info->freqs)
