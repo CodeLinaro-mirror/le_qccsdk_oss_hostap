@@ -2361,3 +2361,222 @@ def test_security_profile_9_ap_all_sta_sec_prof(dev, apdev):
         hwsim_utils.test_connectivity(dev[0], hapd)
     finally:
         sta_cleanup(dev[0])
+
+def test_security_profile_0_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 0 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 0)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].set("pasn_groups", "")
+        dev[0].connect("sec-profs", key_mgmt="EPPKE",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 0, akm='00-0f-ac-29', auth_alg='9',
+                               eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_1_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 1 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 1)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].set("pasn_groups", "")
+        dev[0].connect("sec-profs", sae_password="12345678",
+                       key_mgmt="SAE-EXT-KEY EPPKE",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 1, akm='00-0f-ac-24', auth_alg='9',
+                               eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_2_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 2 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 2)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].set("pasn_groups", "")
+        dev[0].connect("sec-profs", sae_password="12345678",
+                       key_mgmt="FT-SAE-EXT-KEY EPPKE",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 2, akm='00-0f-ac-25', auth_alg='9',
+                               eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_3_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 3 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 3)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].connect("sec-profs",
+                       eap="TLS",
+                       identity="tls user",
+                       ca_cert="auth_serv/ca.pem",
+                       client_cert="auth_serv/user.pem",
+                       private_key="auth_serv/user.key",
+                       key_mgmt="WPA-EAP-SHA256",
+                       eap_over_auth_frame="1",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 3, akm='00-0f-ac-5', eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_4_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 4 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 4)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].connect("sec-profs",
+                       eap="TLS",
+                       identity="tls user",
+                       ca_cert="auth_serv/ca.pem",
+                       client_cert="auth_serv/user.pem",
+                       private_key="auth_serv/user.key",
+                       key_mgmt="FT-EAP",
+                       eap_over_auth_frame="1",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 4, akm='00-0f-ac-3', eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_5_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 5 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 5)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].connect("sec-profs",
+                       eap="TLS",
+                       identity="tls user",
+                       ca_cert="auth_serv/ca.pem",
+                       client_cert="auth_serv/user.pem",
+                       private_key="auth_serv/user.key",
+                       key_mgmt="WPA-EAP-SHA384",
+                       eap_over_auth_frame="1",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 5, akm='00-0f-ac-23', eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_6_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 6 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 6)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].connect("sec-profs",
+                       eap="TLS",
+                       identity="tls user",
+                       ca_cert="auth_serv/ca.pem",
+                       client_cert="auth_serv/user.pem",
+                       private_key="auth_serv/user.key",
+                       key_mgmt="FT-EAP-SHA384",
+                       eap_over_auth_frame="1",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 6, akm='00-0f-ac-22', eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_7_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 7 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 7)
+    hapd = sec_prof_ap_all(apdev, suite_b_192=True)
+
+    try:
+        dev[0].connect("sec-profs",
+                       openssl_ciphers="SUITEB192",
+                       eap="TLS",
+                       identity="tls user",
+                       ca_cert="auth_serv/ec2-ca.pem",
+                       client_cert="auth_serv/ec2-user.pem",
+                       private_key="auth_serv/ec2-user.key",
+                       key_mgmt="WPA-EAP-SUITE-B-192",
+                       eap_over_auth_frame="1",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 7, akm='00-0f-ac-12', eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_8_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 8 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 8)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].set("pasn_groups", "")
+        dev[0].connect("sec-profs", key_mgmt="OWE",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 8, akm='00-0f-ac-18', eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
+
+def test_security_profile_9_ap_all_sta_key_mgmt(dev, apdev):
+    """Security Profile 9 with STA key_mgmt config"""
+    enable_sta_security_profiles(dev[0], 9)
+    hapd = sec_prof_ap_all(apdev)
+
+    try:
+        dev[0].set("sae_groups", "")
+        dev[0].set("sae_pwe", "2")
+        dev[0].connect("sec-profs", sae_password="12345678",
+                       key_mgmt="SAE-EXT-KEY",
+                       ieee80211w="2", beacon_prot="1", pmksa_privacy="1",
+                       pairwise="GCMP-256", group="GCMP-256",
+                       group_mgmt="BIP-GMAC-256",
+                       scan_freq="2412")
+        hapd.wait_sta()
+        check_security_profile(hapd, dev[0], 9, akm='00-0f-ac-24', auth_alg='3',
+                               eht=False)
+        hwsim_utils.test_connectivity(dev[0], hapd)
+    finally:
+        sta_cleanup(dev[0])
