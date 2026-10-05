@@ -375,6 +375,7 @@ int nl80211_get_link_signal(struct i802_bss *bss, const u8 *bssid,
 int nl80211_get_link_noise(struct i802_bss *bss,
 			   struct wpa_signal_info *sig_change);
 int nl80211_get_wiphy_index(struct i802_bss *bss);
+int nl80211_get_macaddr(struct i802_bss *bss, u8 *addr);
 int wpa_driver_nl80211_set_mode(struct i802_bss *bss,
 				enum nl80211_iftype nlmode);
 int wpa_driver_nl80211_mlme(struct wpa_driver_nl80211_data *drv,

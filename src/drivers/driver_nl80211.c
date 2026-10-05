@@ -977,11 +977,11 @@ static enum nl80211_iftype nl80211_get_ifmode(struct i802_bss *bss)
 }
 
 
-static int nl80211_get_macaddr(struct i802_bss *bss)
+int nl80211_get_macaddr(struct i802_bss *bss, u8 *addr)
 {
 	struct nl_msg *msg;
 	struct wiphy_idx_data data = {
-		.macaddr = bss->addr,
+		.macaddr = addr,
 	};
 
 	if (!(msg = nl80211_cmd_msg(bss, 0, NL80211_CMD_GET_INTERFACE)))
@@ -3564,7 +3564,7 @@ wpa_driver_nl80211_finish_drv_init(struct i802_bss *bss, const u8 *set_addr,
 	}
 
 	if (!nl80211_is_netdev_iftype(nl80211_get_ifmode(bss)))
-		nl80211_get_macaddr(bss);
+		nl80211_get_macaddr(bss, bss->addr);
 
 	wpa_driver_nl80211_drv_init_rfkill(drv);
 
