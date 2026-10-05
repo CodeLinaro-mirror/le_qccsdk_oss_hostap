@@ -1182,6 +1182,8 @@ static int wpas_eppke_initialize(struct wpa_supplicant *wpa_s,
 	size_t rsne_len = sizeof(rsne);
 	int len;
 
+	wpa_printf(MSG_DEBUG, "EPPKE: Initialize");
+
 	pasn = &wpa_s->pasn;
 
 	group = wpas_pasn_get_group(wpa_s, ssid, pasn);
@@ -1517,12 +1519,19 @@ static void sme_send_authentication(struct wpa_supplicant *wpa_s,
 	bool local_ft;
 #endif /* CONFIG_IEEE80211R */
 
+	wpa_printf(MSG_DEBUG, "SME: %s", __func__);
+
 	if (bss == NULL) {
 		wpa_msg(wpa_s, MSG_ERROR, "SME: No scan result available for "
 			"the network");
 		wpas_connect_work_done(wpa_s);
 		return;
 	}
+
+	if (wpa_s->sel_security_profile)
+		wpa_printf(MSG_DEBUG,
+			   "SME: Previously selected security profile: %d",
+			   wpa_s->sel_security_profile->number);
 
 	os_memset(&params, 0, sizeof(params));
 
@@ -2107,6 +2116,9 @@ static void sme_send_authentication(struct wpa_supplicant *wpa_s,
 #endif /* CONFIG_MBO */
 
 skip_setup:
+	wpa_printf(MSG_DEBUG,
+		   "SME: %s at skip_setup: skip_auth=%d params.auth_alg=0x%x",
+		   __func__, skip_auth, params.auth_alg);
 #ifdef CONFIG_ENC_ASSOC
 	if (!skip_auth && params.auth_alg == WPA_AUTH_ALG_EPPKE) {
 		if (start) {
