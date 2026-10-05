@@ -1151,6 +1151,7 @@ class WpaSupplicant:
                       "pmksa_privacy",
                       "eap_over_auth_frame",
                       "security_profiles",
+                      "disable_pmksa_caching",
                       "disable_uhr"]
         for field in not_quoted:
             if field in kwargs and kwargs[field]:

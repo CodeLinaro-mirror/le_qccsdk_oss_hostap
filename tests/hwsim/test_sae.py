@@ -166,6 +166,28 @@ def test_sae_pmksa_caching_disabled(dev, apdev):
     if dev[0].get_status_field('sae_group') != '19':
             raise Exception("Expected default SAE group not used")
 
+@remote_compatible
+def test_sae_pmksa_caching_disabled_sta(dev, apdev):
+    """SAE and PMKSA caching disabled on STA"""
+    check_sae_capab(dev[0])
+    params = hostapd.wpa2_params(ssid="test-sae",
+                                 passphrase="12345678")
+    params['wpa_key_mgmt'] = 'SAE'
+    hapd = hostapd.add_ap(apdev[0], params)
+
+    dev[0].request("SET sae_groups ")
+    dev[0].connect("test-sae", psk="12345678", key_mgmt="SAE",
+                   disable_pmksa_caching="1", scan_freq="2412")
+    ev = hapd.wait_event(["AP-STA-CONNECTED"], timeout=5)
+    if ev is None:
+        raise Exception("No connection event received from hostapd")
+    dev[0].request("DISCONNECT")
+    dev[0].wait_disconnected()
+    dev[0].request("RECONNECT")
+    dev[0].wait_connected(timeout=15, error="Reconnect timed out")
+    if dev[0].get_status_field('sae_group') != '19':
+            raise Exception("Expected default SAE group not used")
+
 def test_sae_groups(dev, apdev):
     """SAE with all supported groups"""
     check_sae_capab(dev[0])
