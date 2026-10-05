@@ -640,8 +640,11 @@ struct wpabuf * wpas_pasn_build_auth_1(struct pasn_data *pasn,
 
 	wpa_printf(MSG_DEBUG, "PASN: Building frame 1");
 
-	if (pasn->trans_seq)
+	if (pasn->trans_seq) {
+		wpa_printf(MSG_DEBUG, "PASN: Unexpected trans_seq=%d",
+			   pasn->trans_seq);
 		return NULL;
+	}
 
 	buf = wpabuf_alloc(1500);
 	if (!buf)
@@ -784,8 +787,11 @@ struct wpabuf * wpas_pasn_build_auth_3(struct pasn_data *pasn, bool full_hdr)
 
 	wpa_printf(MSG_DEBUG, "PASN: Building frame 3");
 
-	if (pasn->trans_seq != WLAN_AUTH_TR_SEQ_PASN_AUTH2)
+	if (pasn->trans_seq != WLAN_AUTH_TR_SEQ_PASN_AUTH2) {
+		wpa_printf(MSG_DEBUG, "PASN: Unexpected trans_seq=%d",
+			   pasn->trans_seq);
 		return NULL;
+	}
 
 	buf = wpabuf_alloc(1500);
 	if (!buf)
