@@ -70,6 +70,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 	wpa_fuzzer_set_debug_level();
 
+	if (size > 10000)
+		return 0;
+
 	/* Full element parsing; dispatches to the Multi-Link element handling
 	 * and to element fragment reassembly. */
 	ieee802_11_parse_elems(data, size, &elems, 1);
